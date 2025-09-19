@@ -1,6 +1,7 @@
 import time
 from typing import Callable
 import os
+from functools import wraps
 
 def timer(fun: Callable) -> Callable:
     @wraps(fun)
