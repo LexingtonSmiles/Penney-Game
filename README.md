@@ -13,3 +13,17 @@ The aim of this project is to:
 - Generate and store randomized decks of outcomes.
 - Provide tools for running simulations with reproducible randomness.
 - Explore empirical probabilities and confirm theoretical predictions.
+
+## Quick Start Guide
+For the purposes of Checkpoint 1 (hi professor), DataGeneration.md includes an explanation of our permutations, tests, and results for data generation and storage.
+run_tests.py is currently placed inside src/ 
+- run to simulate tests
+
+## Contents
+src/: Contains code that is needed to make the project work.
+
+data/: Contains generated files of each deck and seed.
+
+DataGeneration.md: Explains an explanation of several methods and permutations tested for the first checkpoint of this project: data generation and storage.
+
+run_tests.py: Generates
