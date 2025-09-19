@@ -25,9 +25,9 @@ results.append(make_files1(tot_n=9, max_decks=2, seed=0))
 
 # Build the pivoted table
 table_rows = [
-    ["File Size", stats["average_size_bytes"], stats["median_file_size"], stats["std_file_size"]],
-    ["Write Time", stats["average_write_time"], stats["median_write_time"], stats["std_write_time"]],
-    ["Read Time", stats["average_read_time"], stats["median_read_time"], stats["std_read_time"]]
+    ["File Size", results["average_size_bytes"], results["median_file_size"], results["std_file_size"]],
+    ["Write Time", results["average_write_time"], results["median_write_time"], results["std_write_time"]],
+    ["Read Time", results["average_read_time"], results["median_read_time"], results["std_read_time"]]
 ]
 
 headers = ["Metric", "Average", "Median", "Std"]
