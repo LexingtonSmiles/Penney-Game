@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import random
 import os
-from wrappers import timer, file_storage_tracker
+from wrappers import timer, file_storage_tracker, measure_rw
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation1"
 
@@ -55,6 +55,7 @@ def savefile(decks: np.array, filepath: str):
 
 
 @timer
+@measure_rw
 @file_storage_tracker
 def make_files1(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
@@ -102,4 +103,6 @@ def make_files1(tot_n:int, max_decks:int = 10000, seed:int = seed):
 
         #update the seed number
         seed = seed + 1
+
+    
     return filepaths
