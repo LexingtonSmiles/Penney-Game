@@ -1,9 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
-import wrappers
 
-@timer
+@timer 
 @file_storage_tracker
 def __generate_decks(tot_decks:int, max_decks:int = 10000):
     """
@@ -25,28 +24,28 @@ def __generate_decks(tot_decks:int, max_decks:int = 10000):
         #creates array of shuffled decks
         array = __shuffle_decks(n = max_decks, seed = seed)
         #saves array
-        __save_deck_file(array, seed, n = max_decks)
+        savefile(array, seed, n = max_decks)
 
     #create last file
     if num_decks_rem != 0:
+        #sets the decks
         n = num_decks_rem
         #finds next seed 
         seed= find_next_seed()
+         #sets the decks generated to the # of decks remaining
         array =  __shuffle_decks(n = n, seed = seed)
-        __save_deck_file(array, seed, n= n)
+        
+        savefile(array, seed, n= n)
     print('all done!')
 
-    
-        #need to generate multiple arrays with diff seeds each array with max_decks
-        #loop and check for what seeds are used already... use filenames to see?...
-        #or can just put the above in a loop for that amount of times
 
 def __calc_decks(tot_decks:int, max_decks:int):
     """
     Calculates the number of files and the amount of decks needed in each file
     """
+    #finds total files with max number of decks
     num_decks_maxxed = tot_decks//max_decks
-
+    #finds the remainder
     num_decks_rem = tot_decks%max_decks
 
     return num_decks_maxxed, num_decks_rem
@@ -57,40 +56,30 @@ def __shuffle_decks(n: int, seed: int):
     """
     rng = np.random.default_rng(seed)
     
-    # Base deck
+    # base deck
     deck = np.array([True] * 26 + [False] * 26)
     
-    # Generate n random permutations of indices [0..51]
+    # generates n random permutations of indices [0..51]
     idx = np.array([rng.permutation(52) for _ in range(n)])
     
-    # Apply permutations to deck
+    # applies permutations to deck
     arr = deck[idx]
     
     return arr
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation2"
 
-def __save_deck_file(array: np.array, seed:int, n:int):
+def savefile(decks: np.array, filepath: str):
     """
-    Saves a numpy array in the default output directory
+    save n decks to a .npy file with a specific file destination
     """
-    filename = __filename_raw(seed =seed, n=n)
-    
+        
+    directory = os.path.dirname(filepath)
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
 
-    # folder where this script lives
-    here = os.path.dirname("Data_Gen_Test.ipynb")
-    
-    # project root (two levels up: data_gen -> src -> PenneysGame)
-    project_root = os.path.abspath(os.path.join(here, "../.."))
-    
-    # point to data/ folder
-    data_dir = os.path.join(project_root, "data")
-    
-    # full file path
-    file_path = os.path.join(data_dir, filename)
-    
-    np.save(file_path, deck)
-    return None
+    np.save(filepath, decks)
+    return
 
 def __filename_raw(seed: int, n: int):
     """
@@ -106,10 +95,9 @@ def __load_data(file_path:str):
 
 def find_next_seed() -> int | None:
     """
-    Scans all files in a directory and finds the highest seed number
+    Scans all files in a folder and finds the highest seed number
     in filenames formatted like '*-deck_seed{seed}_n_{n}'.
-    
-    Works for both 'raw-deck' and 'cooked-deck'.
+    Returns the next seed needed or 0 if no files exist
     """
     seeds = []
     
@@ -123,4 +111,4 @@ def find_next_seed() -> int | None:
                 seeds.append(int(seed_str))
             except (IndexError, ValueError):
                 continue
-    return int(max(seeds)+1) if seeds else 1
+    return int(max(seeds)+1) if seeds else 0
