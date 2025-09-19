@@ -18,24 +18,32 @@ def table(fun):
     headers = ["Metric", "Average", "Median", "Std"]
 
     return tabulate(table_rows, headers=headers, tablefmt="grid", floatfmt=".3f")
+    
+with open(md_filename, "w") as f:
+    f.write("# 📊 Performance Test Results\n\n")
 
-#Test 1:
-print(f'Test 1:')
-perm1 = table(make_files1(tot_n = 500000, max_decks = 1000, seed = 0))
-print(perm1)
-perm3 = table(make_files3(tot_n = 500000, max_decks = 10000, seed = 0))
-print(perm3)
+    # Test 1
+    print("Test 1:")
+    perm3 = table(make_files3(tot_n=500000, max_decks=10000, seed=0))
+    print(perm3)
+    f.write("## Test 1\n\n")
+    f.write(perm3 + "\n\n")
 
-#Test 2:
-print(f'Test 1:')
-print(perm3)
-perm5 = table(make_files5(tot_n = 500000, max_decks = 10000, seed = 0))
-print(perm5)
+    # Test 2
+    print("Test 2:")
+    print(perm3)  # reuse perm3 result
+    perm5 = table(make_files5(tot_n=500000, max_decks=10000, seed=0))
+    print(perm5)
+    f.write("## Test 2\n\n")
+    f.write(perm5 + "\n\n")
 
+    # Test 3
+    print("Test 3:")
+    # Example run, replace with your actual function
+    perm7 = table(make_files7(tot_n=500000, max_decks=10000, seed=0))
+    print(perm7)
+    f.write("## Test 3\n\n")
+    f.write(perm7 + "\n\n")
 
-#Test 3:
-print(f'Test 1:')
-print(perm5)
-perm7 = table(make_files7(tot_n = 500000, max_decks = 10000, seed = 0))
-print(perm7)
+print(f"\n✅ All test tables saved to {md_filename}")
 
