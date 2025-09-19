@@ -1,6 +1,11 @@
+import time
 from typing import Callable
-from datetime import datetime as dt
 
-def debugger(fun:Callable) -> Callable:
-    def _wrapper():
-        
+def timer(fun: Callable) -> Callable:
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = fun(*args, **kwargs)
+        end = time.perf_counter()
+        print(f"{fun.__name__} took {end - start:.6f} seconds")
+        return result
+    return wrapper
