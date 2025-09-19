@@ -70,13 +70,13 @@ def measure_rw(fun: Callable)-> Callable:
         read_speed = total_size / read_duration if read_duration else 0
 
         # --- Print Summary ---
-        print(f"\n📊 Read/Write Performance for `{fun.__name__}`:")
-        print(f"📝 Number of files:     {len(file_paths)}")
-        print(f"💾 Total size:          {total_size / 1_000_000:.3f} MB")
-        print(f"🕒 Write time:          {write_duration:.6f} seconds")
-        print(f"🚀 Write speed:         {write_speed / 1_000_000:.3f} MB/s")
-        print(f"🕒 Read time:           {read_duration:.6f} seconds")
-        print(f"🚀 Read speed:          {read_speed / 1_000_000:.3f} MB/s")
+        print(f"Read/Write Performance for `{fun.__name__}`:")
+        print(f"Number of files:     {len(file_paths)}")
+        print(f"Total size:          {total_size / 1_000_000:.3f} MB")
+        print(f"Write time:          {write_duration:.6f} seconds")
+        print(f"Write speed:         {write_speed / 1_000_000:.3f} MB/s")
+        print(f"Read time:           {read_duration:.6f} seconds")
+        print(f"Read speed:          {read_speed / 1_000_000:.3f} MB/s")
 
         return result  # Return original output so function still behaves normally
     return wrapper
