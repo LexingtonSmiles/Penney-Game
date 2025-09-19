@@ -28,24 +28,24 @@ def __generate_decks(tot_decks:int, max_decks:int = 10000):
 
     #create last file
     if num_decks_rem != 0:
+        #sets the decks
         n = num_decks_rem
         #finds next seed 
         seed= find_next_seed()
+         #sets the decks generated to the # of decks remaining
         array =  __shuffle_decks(n = n, seed = seed)
+        
         __save_deck_file(array, seed, n= n)
     print('all done!')
 
-    
-        #need to generate multiple arrays with diff seeds each array with max_decks
-        #loop and check for what seeds are used already... use filenames to see?...
-        #or can just put the above in a loop for that amount of times
 
 def __calc_decks(tot_decks:int, max_decks:int):
     """
     Calculates the number of files and the amount of decks needed in each file
     """
+    #finds total files with max number of decks
     num_decks_maxxed = tot_decks//max_decks
-
+    #finds the remainder
     num_decks_rem = tot_decks%max_decks
 
     return num_decks_maxxed, num_decks_rem
@@ -56,13 +56,13 @@ def __shuffle_decks(n: int, seed: int):
     """
     rng = np.random.default_rng(seed)
     
-    # Base deck
+    # base deck
     deck = np.array([True] * 26 + [False] * 26)
     
-    # Generate n random permutations of indices [0..51]
+    # generates n random permutations of indices [0..51]
     idx = np.array([rng.permutation(52) for _ in range(n)])
     
-    # Apply permutations to deck
+    # applies permutations to deck
     arr = deck[idx]
     
     return arr
@@ -95,10 +95,9 @@ def __load_data(file_path:str):
 
 def find_next_seed() -> int | None:
     """
-    Scans all files in a directory and finds the highest seed number
+    Scans all files in a folder and finds the highest seed number
     in filenames formatted like '*-deck_seed{seed}_n_{n}'.
-    
-    Works for both 'raw-deck' and 'cooked-deck'.
+    Returns the next seed needed or 0 if no files exist
     """
     seeds = []
     
@@ -112,4 +111,4 @@ def find_next_seed() -> int | None:
                 seeds.append(int(seed_str))
             except (IndexError, ValueError):
                 continue
-    return int(max(seeds)+1) if seeds else 1
+    return int(max(seeds)+1) if seeds else 0
