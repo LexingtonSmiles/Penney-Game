@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 import os
 
-
+@timer 
+@file_storage_tracker
 def __generate_decks(tot_decks:int, max_decks:int = 10000):
     """
     Generates tot_decks of decks with n decks in each file, with a n maxxing out at max_decks
@@ -66,29 +67,19 @@ def __shuffle_decks(n: int, seed: int):
     
     return arr
 
-PATH_DATA = '/Users/lexnguyen/Library/CloudStorage/OneDrive-William&Mary/Fall 2025/DATA_440/PenneysGame/data'
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation2"
 
-def __save_deck_file(array: np.array, seed:int, n:int):
+def savefile(decks: np.array, filepath: str):
     """
-    Saves a numpy array in the default output directory
+    save n decks to a .npy file with a specific file destination
     """
-    filename = __filename_raw(seed =seed, n=n)
-    
+        
+    directory = os.path.dirname(filepath)
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
 
-    # folder where this script lives
-    here = os.path.dirname("Data_Gen_Test.ipynb")
-    
-    # project root (two levels up: data_gen -> src -> PenneysGame)
-    project_root = os.path.abspath(os.path.join(here, "../.."))
-    
-    # point to data/ folder
-    data_dir = os.path.join(project_root, "data")
-    
-    # full file path
-    file_path = os.path.join(data_dir, filename)
-    
-    np.save(file_path, deck)
-    return None
+    np.save(filepath, decks)
+    return
 
 def __filename_raw(seed: int, n: int):
     """

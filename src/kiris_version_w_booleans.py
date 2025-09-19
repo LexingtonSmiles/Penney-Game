@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 import random
 import os
+import wrappers
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation3"
 
 seed = 0
 
@@ -12,7 +13,7 @@ def generate_decks(seed: int):
     make an numpy array of 52 0s and 1s to show black and red cards in a deck
     """
     random.seed(seed)
-    arr = np.array([0] * 25 + [1] * 25)
+    arr = np.array([True] * 26 + [False] * 26)
     np.random.shuffle(arr)
     return arr
 
@@ -30,6 +31,8 @@ def filepath_raw(seed: int, num_of_decks: int):
         
     return raw_filepath
 
+@timer
+@file_storage_tracker
 def savefile(decks: np.array, filepath: str):
     """
     save n decks to a .npy file with a specific file destination
@@ -87,4 +90,3 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
         #update the seed number
         seed = seed + 1
     return
-

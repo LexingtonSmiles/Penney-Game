@@ -3,7 +3,7 @@ import numpy as np
 import random
 import os
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation3"
 
 seed = 0
 
@@ -12,7 +12,7 @@ def generate_decks(seed: int):
     make an numpy array of 52 0s and 1s to show black and red cards in a deck
     """
     random.seed(seed)
-    arr = np.array([0] * 26 + [1] * 26)
+    arr = np.array([True] * 26 + [False] * 26)
     np.random.shuffle(arr)
     return arr
 
@@ -42,6 +42,9 @@ def savefile(decks: np.array, filepath: str):
     np.save(filepath, decks)
     return
 
+
+@timer 
+@file_storage_tracker
 def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
     use generate function to make the decks for each file then use save function to 

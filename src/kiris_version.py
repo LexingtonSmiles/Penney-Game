@@ -2,14 +2,11 @@ import pandas as pd
 import numpy as np
 import random
 import os
-
-
-
+import wrappers
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation1"
 
 seed = 0
-
 
 def generate_decks(seed: int):
     """
@@ -34,6 +31,8 @@ def filepath_raw(seed: int, num_of_decks: int):
         
     return raw_filepath
 
+@timer
+@file_storage_tracker
 def savefile(decks: np.array, filepath: str):
     """
     save n decks to a .npy file with a specific file destination
@@ -46,8 +45,6 @@ def savefile(decks: np.array, filepath: str):
     np.save(filepath, decks)
     return
 
-@timer 
-@file_storage_tracker
 def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
     use generate function to make the decks for each file then use save function to 

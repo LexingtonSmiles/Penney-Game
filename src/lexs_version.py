@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
 import os
+import wrappers
 
-
+@timer
+@file_storage_tracker
 def __generate_decks(tot_decks:int, max_decks:int = 10000):
     """
     Generates tot_decks of decks with n decks in each file, with a n maxxing out at max_decks
@@ -56,7 +58,7 @@ def __shuffle_decks(n: int, seed: int):
     rng = np.random.default_rng(seed)
     
     # Base deck
-    deck = np.array([0] * 26 + [1] * 26)
+    deck = np.array([True] * 26 + [False] * 26)
     
     # Generate n random permutations of indices [0..51]
     idx = np.array([rng.permutation(52) for _ in range(n)])
@@ -66,19 +68,29 @@ def __shuffle_decks(n: int, seed: int):
     
     return arr
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation2"
 
-def savefile(decks: np.array, filepath: str):
+def __save_deck_file(array: np.array, seed:int, n:int):
     """
-    save n decks to a .npy file with a specific file destination
+    Saves a numpy array in the default output directory
     """
-        
-    directory = os.path.dirname(filepath)
-    if directory and not os.path.exists(directory):
-        os.makedirs(directory)
+    filename = __filename_raw(seed =seed, n=n)
+    
 
-    np.save(filepath, decks)
-    return
+    # folder where this script lives
+    here = os.path.dirname("Data_Gen_Test.ipynb")
+    
+    # project root (two levels up: data_gen -> src -> PenneysGame)
+    project_root = os.path.abspath(os.path.join(here, "../.."))
+    
+    # point to data/ folder
+    data_dir = os.path.join(project_root, "data")
+    
+    # full file path
+    file_path = os.path.join(data_dir, filename)
+    
+    np.save(file_path, deck)
+    return None
 
 def __filename_raw(seed: int, n: int):
     """
