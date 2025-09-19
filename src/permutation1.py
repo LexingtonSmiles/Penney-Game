@@ -102,7 +102,7 @@ def make_files1(tot_n:int, max_decks:int = 10000, seed:int = seed):
 
         #update the seed number
         seed = seed + 1
-        
-    total_size = sum(os.path.getsize(path) for path in filepaths if os.path.exists(path))
 
-    return filepaths, total_size
+    file_sizes = [os.path.getsize(path) for path in filepaths if os.path.exists(path)]
+
+    return filepaths, file_sizes
