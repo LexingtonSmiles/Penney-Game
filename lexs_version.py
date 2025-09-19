@@ -24,7 +24,7 @@ def __generate_decks(tot_decks:int, max_decks:int = 10000):
         #creates array of shuffled decks
         array = __shuffle_decks(n = max_decks, seed = seed)
         #saves array
-        __save_deck_file(array, seed, n = max_decks)
+        savefile(array, seed, n = max_decks)
 
     #create last file
     if num_decks_rem != 0:
@@ -35,7 +35,7 @@ def __generate_decks(tot_decks:int, max_decks:int = 10000):
          #sets the decks generated to the # of decks remaining
         array =  __shuffle_decks(n = n, seed = seed)
         
-        __save_deck_file(array, seed, n= n)
+        savefile(array, seed, n= n)
     print('all done!')
 
 
