@@ -6,8 +6,9 @@ These include:
   - (a)generating random indices
     
     vs.
-  - (b)kiri help
-- detecing seed to use for deck generation:
+  - (b)flattening the n decks into a single list then shuffling. splitting the list into num arrays while preserving the original deck size
+    
+- detecting seed to use for deck generation:
   - (c)scanning each file in the data folder and returning the next highest integer
     
     vs
