@@ -18,6 +18,15 @@ These include:
     
     vs
   - (f) 0s and 1s
+ 
+Test of booleans vs 0s and 1s:
+permutation 1 vs permutation 3.
+
+Test of shuffle decks:
+permutation 3: bde
+lexs version with storing seeds same as kiri: ade
+
+
 
 permutation 1: is kiri's version (bdf)
 
@@ -27,7 +36,7 @@ permutation 3: kiri's version with booleans (bde)
 
 permutation 4: lex's version with 0s and 1s (acf)
 
-permutation 5: 
+permutation 5: ade
 
 permutation 6: 
 
