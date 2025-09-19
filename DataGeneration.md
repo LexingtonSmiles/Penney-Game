@@ -3,29 +3,29 @@
 We have three distinct comparisons we want to test for data generation or storage.
 These include:
 - the way we shuffle decks:
-  - generating random indices
+  - (a)generating random indices
     
     vs.
-  - kiri help
+  - (b)kiri help
 - detecing seed to use for deck generation:
-  - scanning each file in the data folder and returning the next highest integer
+  - (c)scanning each file in the data folder and returning the next highest integer
     
     vs
-  - storing a seed variable and updating with +1 each time a file is generated
+  - (d)storing a seed variable and updating with +1 each time a file is generated
   
 - the storage of decks using:
-  - booleans
+  - (e)booleans
     
     vs
-  -  0s and 1s
+  - (f) 0s and 1s
 
-permutation 1: is kiri's version
+permutation 1: is kiri's version (bdf)
 
-permutation 2: lex's version
+permutation 2: lex's version (ace)
 
-permutation 3: kiri's version with booleans
+permutation 3: kiri's version with booleans (bde)
 
-permutation 4: lex's version with 0s and 1s
+permutation 4: lex's version with 0s and 1s (acf)
 
 permutation 5: 
 
