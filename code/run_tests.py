@@ -18,9 +18,12 @@ def table(fun):
     headers = ["Metric", "Average", "Median", "Std"]
 
     return tabulate(table_rows, headers=headers, tablefmt="grid", floatfmt=".3f")
-    
+
+# Markdown file to save everything
+md_filename = "all_test_results.md"
+
 with open(md_filename, "w") as f:
-    f.write("# 📊 Performance Test Results\n\n")
+    f.write("# Performance Test Results\n\n")
 
     # Test 1
     print("Test 1:")
@@ -45,5 +48,5 @@ with open(md_filename, "w") as f:
     f.write("## Test 3\n\n")
     f.write(perm7 + "\n\n")
 
-print(f"\n✅ All test tables saved to {md_filename}")
+print(f"\n All test tables saved to {md_filename}")
 
