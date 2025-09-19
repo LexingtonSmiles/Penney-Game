@@ -1,4 +1,8 @@
 # Data Generation and Storage Assessment and Test 
+## Quick Setup:
+The code to run to test for oneself (hi professor) is in /code, titled run_tests.py
+
+## Method
 
 We have three distinct comparisons we want to test for data generation or storage.
 These include:
