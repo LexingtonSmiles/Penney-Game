@@ -2,25 +2,28 @@ import pandas as pd
 import numpy as np
 import random
 import os
-from wrappers import timer, file_storage_tracker
+from wrappers import measure_rw
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation3"
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation5"
 
 seed = 0
 
-def generate_decks(num: int, seed: int):
+def generate_decks(n: int, seed: int):
     """
-    make an numpy array of 52 0s and 1s to show black and red cards in a deck
+    Creates n by 52 array of n amount of shuffled decks each containing 26 Trues and 26 Falses
     """
-    arr = []
-    for i in range(num):
-        arr.append(np.array([False] * 26 + [True] * 26))
-    flat = [item for sublist in arr for item in sublist]
-    random.shuffle(flat)
-    rows = len(arr)
-    cols = len(arr[0])
-    shuffled_arr = [flat[i * cols:(i + 1) * cols] for i in range(rows)]
-    return shuffled_arr
+    rng = np.random.default_rng(seed)
+    
+    # base deck
+    deck = np.array([True] * 26 + [False] * 26)
+    
+    # generates n random permutations of indices [0..51]
+    idx = np.array([rng.permutation(52) for _ in range(n)])
+    
+    # applies permutations to deck
+    arr = deck[idx]
+    
+    return arr
 
 def num_of_decks_per_file(tot_n:int, max_decks:int):
     #calculate number of files that will be filled to their max deck size
@@ -53,8 +56,7 @@ def savefile(decks: np.array, filepath: str):
     np.save(filepath, decks)
     return
 
-@timer
-@file_storage_tracker
+@measure_rw
 def make_files3(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
     use generate function to make the decks for each file then use save function to 
@@ -101,4 +103,7 @@ def make_files3(tot_n:int, max_decks:int = 10000, seed:int = seed):
 
         #update the seed number
         seed = seed + 1
-    return filepaths
+
+    file_sizes = [os.path.getsize(path) for path in filepaths if os.path.exists(path)]
+
+    return filepaths, file_sizes
