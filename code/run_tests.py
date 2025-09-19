@@ -1,6 +1,7 @@
 from permutation1 import make_files1
 from permutation3 import make_files3
 from permutation5 import make_files5
+from permutation5 import make_files7
 from tabulate import tabulate
 
 # Run and collect performance results
@@ -20,8 +21,8 @@ def table(fun):
 
 #Test 1:
 print(f'Test 1:')
-#perm1 = table(make_files1(tot_n = 500000, max_decks = 1000, seed = 0))
-#print(perm1)
+perm1 = table(make_files1(tot_n = 500000, max_decks = 1000, seed = 0))
+print(perm1)
 perm3 = table(make_files3(tot_n = 500000, max_decks = 10000, seed = 0))
 print(perm3)
 
@@ -34,4 +35,7 @@ print(perm5)
 
 #Test 3:
 print(f'Test 1:')
+print(perm5)
+perm7 = table(make_files7(tot_n = 500000, max_decks = 10000, seed = 0))
+print(perm7)
 
