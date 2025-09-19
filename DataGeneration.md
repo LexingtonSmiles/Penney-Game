@@ -20,29 +20,22 @@ These include:
     vs
   - (f) 0s and 1s
  
-Test of booleans vs 0s and 1s:
+Test 1: compares storage of deck methods- Booleans vs 0s and 1s: 
 permutation 1 vs permutation 3.
 
-Test of shuffle decks:
-permutation 3: bde
-lexs version with storing seeds same as kiri: ade
+Test 2: compares shuffle decks methods: 
+permutation 3 vs permutation 5
+
+Test 3: compares seed detection: 
+Permutation 3 or 5 vs permutation 7
 
 
 
-permutation 1: is kiri's version (bdf)
+Permutation 1: b, d, f
 
-permutation 2: lex's version (ace)
+Permutation 3: b, d, e
 
-permutation 3: kiri's version with booleans (bde)
+Permutation 5: a, d, e
 
-permutation 4: lex's version with 0s and 1s (acf)
+Permutation 7: c, e
 
-permutation 5: ade
-
-permutation 6: 
-
-permutation 7: 
-
-permutation 8: 
-
-permutation 9: 
