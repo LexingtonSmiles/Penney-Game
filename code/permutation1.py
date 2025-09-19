@@ -12,6 +12,7 @@ def generate_decks(num: int, seed: int):
     """
     make an numpy array of 52 0s and 1s to show black and red cards in a deck
     """
+    random.seed(seed)
     arr = []
     for i in range(num):
         arr.append(np.array([0] * 26 + [1] * 26))

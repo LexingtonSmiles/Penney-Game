@@ -20,13 +20,16 @@ def table(fun):
 
 #Test 1:
 print(f'Test 1:')
-table(make_files1(tot_n = 500000, max_decks = 1000, seed = 0))
-table(make_files3(tot_n = 500000, max_decks = 1000, seed = 0))
+#perm1 = table(make_files1(tot_n = 500000, max_decks = 1000, seed = 0))
+#print(perm1)
+perm3 = table(make_files3(tot_n = 500000, max_decks = 10000, seed = 0))
+print(perm3)
 
 #Test 2:
 print(f'Test 1:')
-table(make_files3(tot_n = 500000, max_decks = 1000, seed = 0))
-table(make_files5(tot_n = 500000, max_decks = 1000, seed = 0))
+print(perm3)
+perm5 = table(make_files5(tot_n = 500000, max_decks = 10000, seed = 0))
+print(perm5)
 
 
 #Test 3:
