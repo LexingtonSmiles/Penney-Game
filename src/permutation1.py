@@ -8,17 +8,24 @@ PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation1"
 
 seed = 0
 
-def generate_decks(seed: int):
+def generate_decks(num: int, seed: int):
     """
     make an numpy array of 52 0s and 1s to show black and red cards in a deck
     """
-    
-    arr = np.array([0] * 26 + [1] * 26)
-    random.Random(seed).shuffle(arr)
-    return arr
+    arr = []
+    for i in range(num):
+        arr.append(np.array([0] * 26 + [1] * 26))
+    flat = [item for sublist in arr for item in sublist]
+    random.shuffle(flat)
+    rows = len(arr)
+    cols = len(arr[0])
+    shuffled_arr = [flat[i * cols:(i + 1) * cols] for i in range(rows)]
+    return shuffled_arr
 
 def num_of_decks_per_file(tot_n:int, max_decks:int):
+    #calculate number of files that will be filled to their max deck size
     full_files = tot_n // max_decks
+    #calculate the number of decks to go in the final file that will not be full
     leftover = tot_n % max_decks
     return full_files, leftover
 
@@ -26,26 +33,30 @@ def filepath_raw(seed: int, num_of_decks: int):
     """
     generate file name for each individual deck
     """
+    #create filename based on the random seed and number of decks in the file
     filename = (f'raw-deck_seed{seed}_num_of_decks{num_of_decks}.npy')
+    #join the filepath previously listed with the new name
     raw_filepath = os.path.join(PATH_DATA, filename)
         
     return raw_filepath
 
-@timer
-@file_storage_tracker
 def savefile(decks: np.array, filepath: str):
     """
     save n decks to a .npy file with a specific file destination
     """
-        
+    #get the directory from the full filepath
     directory = os.path.dirname(filepath)
+    #if the directory part is not empty and it doesn't exist then create it
     if directory and not os.path.exists(directory):
         os.makedirs(directory)
-
+    #save the numpy array to the specified .npy file
     np.save(filepath, decks)
     return
 
-def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
+
+@timer
+@file_storage_tracker
+def make_files1(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
     use generate function to make the decks for each file then use save function to 
     save each file with the filename function
@@ -53,7 +64,7 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
     #use num of files to determine how many decks go in each file
     full_files, leftover = num_of_decks_per_file(tot_n = tot_n, max_decks = max_decks)
 
-    
+    filepaths = [] 
 
     for i in range(full_files):
         #make a placeholder for all decks about to go into the file
@@ -61,14 +72,15 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
          
         #generate decks for the full files
         if full_files != 0:
-            for i in range(max_decks):
-                full_storage.append(generate_decks(seed))
+            full_storage.append(generate_decks(max_decks, seed))
             
             #make filepath/name
             filepath = filepath_raw(seed, max_decks)
 
             #use save file raw to save the file with all the decks in it  
             savefile(full_storage, filepath)
+
+            filepaths.append(filepath)
 
             #update the seed number
             seed = seed + 1
@@ -78,8 +90,7 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
         leftover_storage = []
             
         #generate decks for the not full files
-        for i in range(leftover):
-            leftover_storage.append(generate_decks(seed))
+        leftover_storage.append(generate_decks(leftover, seed))
 
         #make filepath/name
         filepath = filepath_raw(seed, leftover)
@@ -87,7 +98,8 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
         #use save file raw to save the file with all the decks in it
         savefile(leftover_storage, filepath)
 
+        filepaths.append(filepath)
+
         #update the seed number
         seed = seed + 1
-    return
-
+    return filepaths
