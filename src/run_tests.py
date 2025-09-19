@@ -1,35 +1,34 @@
 from permutation1 import make_files1
+from permutation3 import make_files3
+from permutation5 import make_files5
 from tabulate import tabulate
-#from permutation3 import make_files3
-
-#make_files1(tot_n=200, max_decks=10, seed = 0)
-
-#make_files3(tot_n=2000000, max_decks=10000, seed = 0)
 
 # Run and collect performance results
-#results = []
-#results.append(make_files1(tot_n=9, max_decks=2, seed=0))
-#results.append(make_files3(tot_n=9, max_decks=2, seed=0))
-
-# Convert list of dicts to table format
-#headers = results[0].keys()        # column headers
-#rows = [list(r.values()) for r in results]  # each row is a list of values
-
-# Print the table
-#print("\n📊 Read/Write Performance Table:")
-#print(tabulate(rows, headers=headers, tablefmt="github"))
-
-# Run and collect performance results
-results = []
-results.append(make_files1(tot_n=9, max_decks=2, seed=0))
+def table(fun):
+    results = fun
 
 # Build the pivoted table
-table_rows = [
-    ["File Size", results["average_size_bytes"], results["median_file_size"], results["std_file_size"]],
-    ["Write Time", results["average_write_time"], results["median_write_time"], results["std_write_time"]],
-    ["Read Time", results["average_read_time"], results["median_read_time"], results["std_read_time"]]
-]
+    table_rows = [
+        ["File Size", results["average_size_bytes"], results["median_file_size"], results["std_file_size"]],
+        ["Write Time", results["average_write_time"], results["median_write_time"], results["std_write_time"]],
+        ["Read Time", results["average_read_time"], results["median_read_time"], results["std_read_time"]]
+    ]
 
-headers = ["Metric", "Average", "Median", "Std"]
+    headers = ["Metric", "Average", "Median", "Std"]
 
-print(tabulate(table_rows, headers=headers, tablefmt="grid", floatfmt=".3f"))
+    return tabulate(table_rows, headers=headers, tablefmt="grid", floatfmt=".3f")
+
+#Test 1:
+print(f'Test 1:')
+table(make_files1(tot_n = 500000, max_decks = 1000, seed = 0))
+table(make_files3(tot_n = 500000, max_decks = 1000, seed = 0))
+
+#Test 2:
+print(f'Test 1:')
+table(make_files3(tot_n = 500000, max_decks = 1000, seed = 0))
+table(make_files5(tot_n = 500000, max_decks = 1000, seed = 0))
+
+
+#Test 3:
+print(f'Test 1:')
+

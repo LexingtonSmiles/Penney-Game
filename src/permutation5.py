@@ -57,7 +57,7 @@ def savefile(decks: np.array, filepath: str):
     return
 
 @measure_rw
-def make_files3(tot_n:int, max_decks:int = 10000, seed:int = seed):
+def make_files5(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
     use generate function to make the decks for each file then use save function to 
     save each file with the filename function
