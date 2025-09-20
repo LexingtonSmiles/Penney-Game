@@ -120,7 +120,7 @@ def find_next_seed() -> int | None:
     
 
     for fname in os.listdir(PATH_DATA):
-        if "-deck_seed" in fname and "_n_" in fname:
+        if "-deck_seed" in fname and "_num_of_decks" in fname:
             try:
                 # Example: "cooked-deck_seed123_n_52"
                 parts = fname.split('_')        # ['cooked-deck', 'seed123', 'n', '52']
