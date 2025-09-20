@@ -31,7 +31,9 @@ with open(md_filename, "w") as f:
     print(perm1)
     perm3 = table(make_files3(tot_n=500000, max_decks=10000, seed=0))
     print(perm3)
-    f.write("## Test 1\n\n")
+    f.write("## Permutation 1\n\n")
+    f.write(perm1 + "\n\n")
+    f.write("## Permutation 3\n\n")
     f.write(perm3 + "\n\n")
 
     # Test 2
@@ -39,7 +41,7 @@ with open(md_filename, "w") as f:
     print(perm3)  # reuse perm3 result
     perm5 = table(make_files5(tot_n=500000, max_decks=10000, seed=0))
     print(perm5)
-    f.write("## Test 2\n\n")
+    f.write("## Permutation 5\n\n")
     f.write(perm5 + "\n\n")
 
     # Test 3
@@ -47,7 +49,7 @@ with open(md_filename, "w") as f:
     print(perm5)
     perm7 = table(make_files7(tot_n=500000, max_decks=10000, seed=0))
     print(perm7)
-    f.write("## Test 3\n\n")
+    f.write("## Permutation 7\n\n")
     f.write(perm7 + "\n\n")
 
 #print(f"\n All test tables saved to {md_filename}")
