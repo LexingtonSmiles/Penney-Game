@@ -26,4 +26,6 @@ data/: Contains generated files of each deck and seed.
 
 DataGeneration.md: Explains an explanation of several methods and permutations tested for the first checkpoint of this project: data generation and storage.
 
-data/run_tests.py: Generates tables and saves them inside the same folder (the code folder)
+data/run_tests.py: Generates tables and saves them inside the same folder (the code folder).
+
+data/all_test_results.md: Contains all the tables generated from our testing.
