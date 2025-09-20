@@ -6,7 +6,6 @@ from wrappers import measure_rw
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation5"
 
-seed = 0
 
 def generate_decks(n: int, seed: int):
     """
@@ -26,6 +25,9 @@ def generate_decks(n: int, seed: int):
     return arr
 
 def num_of_decks_per_file(tot_n:int, max_decks:int):
+    """
+    calculate the number of full files there will be and how many leftover decks there will be to go into the file
+    """
     #calculate number of files that will be filled to their max deck size
     full_files = tot_n // max_decks
     #calculate the number of decks to go in the final file that will not be full

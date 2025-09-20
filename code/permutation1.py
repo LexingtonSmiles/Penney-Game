@@ -14,16 +14,24 @@ def generate_decks(num: int, seed: int):
     """
     random.seed(seed)
     arr = []
+
+    #create num decks of 26 0s and 26 1s
     for i in range(num):
         arr.append(np.array([0] * 26 + [1] * 26))
+    #flatten decks into a single list
     flat = [item for sublist in arr for item in sublist]
+    #shuffle the list
     random.shuffle(flat)
+    #reshape the flat list back into individual shuffled decks
     rows = len(arr)
     cols = len(arr[0])
     shuffled_arr = [flat[i * cols:(i + 1) * cols] for i in range(rows)]
     return shuffled_arr
 
 def num_of_decks_per_file(tot_n:int, max_decks:int):
+    """
+    calculate the number of full files there will be and how many leftover decks there will be to go into the file
+    """
     #calculate number of files that will be filled to their max deck size
     full_files = tot_n // max_decks
     #calculate the number of decks to go in the final file that will not be full

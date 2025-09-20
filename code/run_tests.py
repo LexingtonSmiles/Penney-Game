@@ -46,11 +46,11 @@ with open(md_filename, "w") as f:
 
     # Test 3
     print("Test 3:")
-    print(perm5)
+    print(perm5) # reuse perm5 result
     perm7 = table(make_files7(tot_n=500000, max_decks=10000, seed=0))
     print(perm7)
     f.write("## Permutation 7\n\n")
     f.write(perm7 + "\n\n")
 
-#print(f"\n All test tables saved to {md_filename}")
+print(f"\n All test tables saved to {md_filename}")
 
