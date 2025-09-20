@@ -43,3 +43,7 @@ Permutation 5: a, d, e
 
 Permutation 7: a, c, e
 
+
+##Results:
+
+According to the tables recorded in all_test_results.md permutation 5 performed the best. This permutation had the fastest run times and the smallest file sizes.
