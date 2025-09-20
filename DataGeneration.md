@@ -41,5 +41,5 @@ Permutation 3: b, d, e
 
 Permutation 5: a, d, e
 
-Permutation 7: c, e
+Permutation 7: a, c, e
 
