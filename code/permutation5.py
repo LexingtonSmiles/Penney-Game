@@ -6,6 +6,7 @@ from wrappers import measure_rw
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation5"
 
+seed = 0
 
 def generate_decks(n: int, seed: int):
     """
