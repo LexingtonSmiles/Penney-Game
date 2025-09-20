@@ -46,4 +46,4 @@ Permutation 7: a, c, e
 
 ##Results:
 
-According to the tables recorded in all_test_results.md permutation 5 performed the best. This permutation had the fastest run times and the smallest file sizes.
+According to the tables recorded in all_test_results.md (open this file in vs code to see in proper formatting) permutation 5 performed the best. This permutation had the fastest run times and the smallest file sizes.
