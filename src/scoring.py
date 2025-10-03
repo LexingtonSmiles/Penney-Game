@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import os
 
-PATH_DATA = "/Users/lexnguyen/Library/CloudStorage/OneDrive-William&Mary/Fall 2025/DATA_440/Penney-Game-Cloned/data1"
-PATH_OUTPUT = "/Users/lexnguyen/Library/CloudStorage/OneDrive-William&Mary/Fall 2025/DATA_440/Penney-Game-Cloned/outputs"
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
+PATH_OUTPUT = "C:/Users/kmand/DATA 440/Penney-Game/outputs"
 def load_first_raw_file(path: str) -> tuple[np.ndarray, str]:
     """
     Load the first file in a folder whose name contains 'raw' using np.load.
@@ -54,23 +54,7 @@ def count_raw_files(path: str) -> int:
 
     return count
 
-def count_raw_files(path: str) -> int:
-    """
-    Count the number of files in the given folder whose filename contains 'raw'.
 
-    Parameters:
-        path (str): Folder path to search.
-
-    Returns:
-        int: Number of files with 'raw' in the filename.
-    """
-    count = 0
-    for fname in os.listdir(path):
-        full_path = os.path.join(path, fname)
-        if os.path.isfile(full_path) and "raw" in fname:
-            count += 1
-
-    return count
 
 # once read, change name
 def rename_raw_to_cooked(path: str, filename: str) -> str:
@@ -146,55 +130,45 @@ def check_or_create_wins_df(folder: str, filename: str, combos: list[dict]) -> p
 
 def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
     """
-    Scores a single deck for both trick and card scoring.
-    
-    Parameters:
-        deck (np.ndarray): the deck to score
-        combos (list): a list of all the combinations of players' choices
-                       each combo is a dict: {"player_a": tuple, "player_b": tuple}
-    
-    Returns:
-        pd.DataFrame: deck number, player combos, and scores
+    Scores a single deck for both trick and card scoring using string find instead of while loop.
     """
-    
     rows = []
-    
-    for i, combo in enumerate(combos):
-        p1 = combo["player_a"]
-        p2 = combo["player_b"]
-        
+
+    # Ensure deck is string format
+    deck_str = ''.join(['1' if card else '0' for card in deck])
+
+
+    for combo in combos:
+        p1 = ''.join(combo["player_a"])
+        p2 = ''.join(combo["player_b"])
+
         p1_tricks = 0
         p1_cards = 0
         p2_tricks = 0
         p2_cards = 0
-        
-        first_card_pos = 0
-        third_card_pos = 3
+
+        i = 0  # starting position in deck_str
         cards_to_win = 3
-        
-        # Loop through deck until there aren't enough cards left for a 3-card comparison
-        while third_card_pos <= len(deck):
-            current_cards = tuple(deck[first_card_pos:third_card_pos])
-            
-            if current_cards == p1:
+
+        while i <= len(deck_str) - 3:
+            window = deck_str[i:i+3]
+
+            if window == p1:
                 p1_tricks += 1
                 p1_cards += cards_to_win
-                first_card_pos += 3
-                third_card_pos += 3
+                i += 3  # skip next 3 cards
                 cards_to_win = 3
-            elif current_cards == p2:
+            elif window == p2:
                 p2_tricks += 1
                 p2_cards += cards_to_win
-                first_card_pos += 3
-                third_card_pos += 3
+                i += 3  # skip next 3 cards
                 cards_to_win = 3
             else:
+                i += 1  # move window by 1
                 cards_to_win += 1
-                first_card_pos += 1
-                third_card_pos += 1
-        
+
         rows.append({
-            "Decks": deck.tolist(), 
+            "Decks": list(deck_str),
             "p1": p1,
             "p2": p2,
             "p1_tricks": p1_tricks,
@@ -202,9 +176,11 @@ def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
             "p2_tricks": p2_tricks,
             "p2_cards": p2_cards
         })
-    
+
     df = pd.DataFrame(rows)
     return df
+
+
 
 def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str) -> None:
     """
@@ -341,6 +317,8 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
             decks = decks[np.newaxis, :]  # make it 2D with 1 row
         
         num_decks = decks.shape[0]
+    
+
         
         for deck_idx in range(num_decks):
             # Get a single deck
@@ -365,61 +343,63 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
 
 #list of dictionaries with the 56 relevant players' choices combos
 combos = [
-    {"player_a": (False, False, False), "player_b": (False, False, True)},
-    {"player_a": (False, False, False), "player_b": (False, True, False)},
-    {"player_a": (False, False, False), "player_b": (False, True, True)},
-    {"player_a": (False, False, False), "player_b": (True, False, False)},
-    {"player_a": (False, False, False), "player_b": (True, False, True)},
-    {"player_a": (False, False, False), "player_b": (True, True, False)},
-    {"player_a": (False, False, False), "player_b": (True, True, True)},
-    {"player_a": (False, False, True), "player_b": (False, False, False)},
-    {"player_a": (False, False, True), "player_b": (False, True, False)},
-    {"player_a": (False, False, True), "player_b": (False, True, True)},
-    {"player_a": (False, False, True), "player_b": (True, False, False)},
-    {"player_a": (False, False, True), "player_b": (True, False, True)},
-    {"player_a": (False, False, True), "player_b": (True, True, False)},
-    {"player_a": (False, False, True), "player_b": (True, True, True)},
-    {"player_a": (False, True, False), "player_b": (False, False, False)},
-    {"player_a": (False, True, False), "player_b": (False, False, True)},
-    {"player_a": (False, True, False), "player_b": (False, True, True)},
-    {"player_a": (False, True, False), "player_b": (True, False, False)},
-    {"player_a": (False, True, False), "player_b": (True, False, True)},
-    {"player_a": (False, True, False), "player_b": (True, True, False)},
-    {"player_a": (False, True, False), "player_b": (True, True, True)},
-    {"player_a": (False, True, True), "player_b": (False, False, False)},
-    {"player_a": (False, True, True), "player_b": (False, False, True)},
-    {"player_a": (False, True, True), "player_b": (False, True, False)},
-    {"player_a": (False, True, True), "player_b": (True, False, False)},
-    {"player_a": (False, True, True), "player_b": (True, False, True)},
-    {"player_a": (False, True, True), "player_b": (True, True, False)},
-    {"player_a": (False, True, True), "player_b": (True, True, True)},
-    {"player_a": (True, False, False), "player_b": (False, False, False)},
-    {"player_a": (True, False, False), "player_b": (False, False, True)},
-    {"player_a": (True, False, False), "player_b": (False, True, False)},
-    {"player_a": (True, False, False), "player_b": (False, True, True)},
-    {"player_a": (True, False, False), "player_b": (True, False, True)},
-    {"player_a": (True, False, False), "player_b": (True, True, False)},
-    {"player_a": (True, False, False), "player_b": (True, True, True)},
-    {"player_a": (True, False, True), "player_b": (False, False, False)},
-    {"player_a": (True, False, True), "player_b": (False, False, True)},
-    {"player_a": (True, False, True), "player_b": (False, True, False)},
-    {"player_a": (True, False, True), "player_b": (False, True, True)},
-    {"player_a": (True, False, True), "player_b": (True, False, False)},
-    {"player_a": (True, False, True), "player_b": (True, True, False)},
-    {"player_a": (True, False, True), "player_b": (True, True, True)},
-    {"player_a": (True, True, False), "player_b": (False, False, False)},
-    {"player_a": (True, True, False), "player_b": (False, False, True)},
-    {"player_a": (True, True, False), "player_b": (False, True, False)},
-    {"player_a": (True, True, False), "player_b": (False, True, True)},
-    {"player_a": (True, True, False), "player_b": (True, False, False)},
-    {"player_a": (True, True, False), "player_b": (True, False, True)},
-    {"player_a": (True, True, False), "player_b": (True, True, True)},
-    {"player_a": (True, True, True), "player_b": (False, False, False)},
-    {"player_a": (True, True, True), "player_b": (False, False, True)},
-    {"player_a": (True, True, True), "player_b": (False, True, False)},
-    {"player_a": (True, True, True), "player_b": (False, True, True)},
-    {"player_a": (True, True, True), "player_b": (True, False, False)},
-    {"player_a": (True, True, True), "player_b": (True, False, True)},
-    {"player_a": (True, True, True), "player_b": (True, True, False)},
+    {"player_a": '000', "player_b": '001'},
+    {"player_a": '000', "player_b": '010'},
+    {"player_a": '000', "player_b": '011'},
+    {"player_a": '000', "player_b": '100'},
+    {"player_a": '000', "player_b": '101'},
+    {"player_a": '000', "player_b": '110'},
+    {"player_a": '000', "player_b": '111'},
+    {"player_a": '001', "player_b": '000'},
+    {"player_a": '001', "player_b": '010'},
+    {"player_a": '001', "player_b": '011'},
+    {"player_a": '001', "player_b": '100'},
+    {"player_a": '001', "player_b": '101'},
+    {"player_a": '001', "player_b": '110'},
+    {"player_a": '001', "player_b": '111'},
+    {"player_a": '010', "player_b": '000'},
+    {"player_a": '010', "player_b": '001'},
+    {"player_a": '010', "player_b": '011'},
+    {"player_a": '010', "player_b": '100'},
+    {"player_a": '010', "player_b": '101'},
+    {"player_a": '010', "player_b": '110'},
+    {"player_a": '010', "player_b": '111'},
+    {"player_a": '011', "player_b": '000'},
+    {"player_a": '011', "player_b": '001'},
+    {"player_a": '011', "player_b": '010'},
+    {"player_a": '011', "player_b": '100'},
+    {"player_a": '011', "player_b": '101'},
+    {"player_a": '011', "player_b": '110'},
+    {"player_a": '011', "player_b": '111'},
+    {"player_a": '100', "player_b": '000'},
+    {"player_a": '100', "player_b": '001'},
+    {"player_a": '100', "player_b": '010'},
+    {"player_a": '100', "player_b": '011'},
+    {"player_a": '100', "player_b": '101'},
+    {"player_a": '100', "player_b": '110'},
+    {"player_a": '100', "player_b": '111'},
+    {"player_a": '101', "player_b": '000'},
+    {"player_a": '101', "player_b": '001'},
+    {"player_a": '101', "player_b": '010'},
+    {"player_a": '101', "player_b": '011'},
+    {"player_a": '101', "player_b": '100'},
+    {"player_a": '101', "player_b": '110'},
+    {"player_a": '101', "player_b": '111'},
+    {"player_a": '110', "player_b": '000'},
+    {"player_a": '110', "player_b": '001'},
+    {"player_a": '110', "player_b": '010'},
+    {"player_a": '110', "player_b": '011'},
+    {"player_a": '110', "player_b": '100'},
+    {"player_a": '110', "player_b": '101'},
+    {"player_a": '110', "player_b": '111'},
+    {"player_a": '111', "player_b": '000'},
+    {"player_a": '111', "player_b": '001'},
+    {"player_a": '111', "player_b": '010'},
+    {"player_a": '111', "player_b": '011'},
+    {"player_a": '111', "player_b": '100'},
+    {"player_a": '111', "player_b": '101'},
+    {"player_a": '111', "player_b": '110'},
 ]
+
+
 
