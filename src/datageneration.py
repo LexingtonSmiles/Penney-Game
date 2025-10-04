@@ -2,9 +2,8 @@ import pandas as pd
 import numpy as np
 import random
 import os
-from wrappers import measure_rw
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data/permutation5"
+PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
 
 seed = 0
 
@@ -59,7 +58,7 @@ def savefile(decks: np.array, filepath: str):
     np.save(filepath, decks)
     return
 
-@measure_rw
+#@measure_rw
 def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
     """
     use generate function to make the decks for each file then use save function to 

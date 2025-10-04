@@ -130,7 +130,15 @@ def check_or_create_wins_df(folder: str, filename: str, combos: list[dict]) -> p
 
 def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
     """
-    Scores a single deck for both trick and card scoring using string find instead of while loop.
+    Scores a single deck for both trick and card scoring.
+
+    Parameters:
+        deck (np.ndarray): the deck to score
+        combos (list): a list of all the combinations of players' choices
+                       each combo is a dict: {"player_a": tuple, "player_b": tuple}
+    
+    Returns:
+        pd.DataFrame: deck number, player combos, and scores
     """
     rows = []
 
