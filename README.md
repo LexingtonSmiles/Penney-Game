@@ -28,4 +28,4 @@ DataGeneration.md: Explains an explanation of several methods and permutations t
 
 main.py: Generates 500,000 decks and scores them.
 
-outputs/.csv: Contains scores for the number of times P1 and P2 won tricks or cards and the number of draws there were in tricks and cards.
+outputs/scoring_analysis.csv: Contains scores for the number of times P1 and P2 won tricks or cards and the number of draws there were in tricks and cards.
