@@ -15,17 +15,17 @@ The aim of this project is to:
 - Explore empirical probabilities and confirm theoretical predictions.
 
 ## Quick Start Guide
-For the purposes of Checkpoint 1 (hi professor), DataGeneration.md includes an explanation of our permutations, tests, and results for data generation and storage.
-run_tests.py is currently placed inside src/ 
-- run to simulate tests
+DataGeneration.md includes an explanation of our permutations, tests, and results for data generation and storage.
+Scoring.md includes an explanation of our scoring logic and the other methods we tried before arriving at our final scoring file.
+To generate and score 500,000 decks run main.py
 
 ## Contents
-code/: Contains source code that is needed to make the project work.
+src/: Contains source code that is used generate the decks as well as score them.
 
 data/: Contains generated files of each deck and seed.
 
 DataGeneration.md: Explains an explanation of several methods and permutations tested for the first checkpoint of this project: data generation and storage.
 
-data/run_tests.py: Generates tables and saves them inside the same folder (the code folder).
+main.py: Generates 500,000 decks and scores them.
 
-data/all_test_results.md: Contains all the tables generated from our testing.
+outputs/.csv: Contains scores for the number of times P1 and P2 won tricks or cards and the number of draws there were in tricks and cards.
