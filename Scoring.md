@@ -1,9 +1,3 @@
-Scoring.md
-
-Describe, in words, how your scoring logic works. 
-Provide simple examples if that helps improve clarity. 
-Include a brief discussion of how you arrived at this method, what else you tried, and how you measured/compared approaches.
-
 # Scoring Assessment and Test 
 ## Quick Setup:
 The code to run to test is main.py
