@@ -186,6 +186,7 @@ def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
         })
 
     df = pd.DataFrame(rows)
+    print(type(p1_tricks))
     return df
 
 
