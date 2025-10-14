@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
 
+def find_num_of_decks_scored(filename):
+    n = filename.split('=')[1]
+    return n
 
 def load_scoring_analysis(path):
     df = pd.read_csv(path, converters = {'p1': str, 'p2' : str})
@@ -57,11 +60,13 @@ def blackbox(value_matrix, ax):
                 )
             )
 
-def heatmap(path: str, t_or_c: str = 'tricks'):
+def heatmap(path: str, t_or_c: str = 'Tricks'):
+    N = find_num_of_decks_scored(path)
+
     df = load_scoring_analysis(path)
-    if t_or_c == 'tricks':
+    if t_or_c == 'Tricks':
         df = calculate('p1_wins_tricks', 'p2_wins_tricks', 'draws_tricks', df)
-    elif t_or_c == 'cards':
+    elif t_or_c == 'Cards':
         df = calculate('p1_wins_cards', 'p2_wins_cards', 'draws_cards', df)
     else:
         raise ValueError("Invalid input")
@@ -78,8 +83,16 @@ def heatmap(path: str, t_or_c: str = 'tricks'):
     blackbox(value_matrix, ax)
 
     # Optional: Titles and labels
-    plt.title(f"My Chance of Win(Draw) by {t_or_c} N={t_or_c}")
+    plt.title(f"My Chance of Win(Draw) \nby {t_or_c} \nN={N}")
     plt.ylabel("Opponent choice")
     plt.xlabel("My choice")
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"By{t_or_c}.svg", format="svg")
+
+
+
+    #Whats left:
+    #add file path to save fig
+    #check efficieny - specically when to make ints or multiply by 100
+    #check if counting the scored decks works
+    #check if new datagen works 

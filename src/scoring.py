@@ -186,12 +186,11 @@ def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
         })
 
     df = pd.DataFrame(rows)
-    print(type(p1_tricks))
     return df
 
 
 
-def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str) -> None:
+def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str, num_of_decks_scored: int) -> None:
     """
     Save a pandas DataFrame to a CSV file.
 
@@ -200,11 +199,14 @@ def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str) -> None:
         folder (str): Directory where the file will be saved.
         filename (str): The name of the file (e.g. 'output.csv').
     """
+    #change num_of_decks_scored to be a string with N=
+    num_of_decks_scored = f"N = {str(num_of_decks_scored)}"
+    
     # Make sure the folder exists
     os.makedirs(folder, exist_ok=True)
 
     # Build full path
-    filepath = os.path.join(folder, filename)
+    filepath = os.path.join(folder, filename, num_of_decks_scored)
 
     # Save DataFrame
     df.to_csv(filepath, index=False)
@@ -328,7 +330,7 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
         num_decks = decks.shape[0]
     
 
-        
+        num_of_decks_scored = 0
         for deck_idx in range(num_decks):
             # Get a single deck
             single_deck = decks[deck_idx]
@@ -341,13 +343,16 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
             
             # Append to main DataFrame
             df = update_results(df,df_wins)
+
+            #update number of decks scored
+            num_of_decks_scored += 1
             
         
         # Rename raw file to mark as processed
         rename_raw_to_cooked(data_folder, filename)
     
     # Save updated DataFrame
-    save_dataframe_to_csv(df, df_folder, df_name)
+    save_dataframe_to_csv(df, df_folder, df_name, num_of_decks_scored)
     
 
 #list of dictionaries with the 56 relevant players' choices combos
