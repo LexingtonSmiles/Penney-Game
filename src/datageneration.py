@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import random
 import os
+import re
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
 
@@ -57,9 +58,28 @@ def savefile(decks: np.array, filepath: str):
     #save the numpy array to the specified .npy file
     np.save(filepath, decks)
     return
+    
+def find_next_seed() -> int:
+    """
+    Scans all files in PATH_DATA and finds the highest seed number
+    in filenames formatted like:
+        'raw-deck_seed{seed}_num_of_decks{n}.npy'
+        'cooked-deck_seed{seed}_num_of_decks{n}.npy'
+    
+    Returns the next unused seed (max + 1), or 0 if no files exist.
+    """
+    pattern = re.compile(r"^(?:raw|cooked)-deck_seed(\d+)_num_of_decks\d+\.npy$")
+    seeds = []
 
+    for fname in os.listdir(PATH_DATA):
+        match = pattern.match(fname)
+        if match:
+            seeds.append(int(match.group(1)))
+
+    return max(seeds) + 1 if seeds else 0
+    
 #@measure_rw
-def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
+def make_files(tot_n:int, max_decks:int = 10000):
     """
     use generate function to make the decks for each file then use save function to 
     save each file with the filename function
@@ -68,13 +88,19 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
     full_files, leftover = num_of_decks_per_file(tot_n = tot_n, max_decks = max_decks)
 
     filepaths = [] 
-
+    
+    #find initial seed for generation
+    seed = find_next_seed()
+    
     for i in range(full_files):
         #make a placeholder for all decks about to go into the file
         full_storage = []
-         
+        
+        
+        
         #generate decks for the full files
         if full_files != 0:
+            
             full_storage.append(generate_decks(max_decks, seed))
             
             #make filepath/name
@@ -85,14 +111,17 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
 
             filepaths.append(filepath)
 
-            #update the seed number
-            seed = seed + 1
+            #update seed num for next file
+            seed += 1
+
+
 
     if leftover != 0:
         #make new placeholder for decks about to go into leftover file
         leftover_storage = []
             
         #generate decks for the not full files
+        seed = find_next_seed()
         leftover_storage.append(generate_decks(leftover, seed))
 
         #make filepath/name
@@ -103,8 +132,6 @@ def make_files(tot_n:int, max_decks:int = 10000, seed:int = seed):
 
         filepaths.append(filepath)
 
-        #update the seed number
-        seed = seed + 1
 
     file_sizes = [os.path.getsize(path) for path in filepaths if os.path.exists(path)]
 
