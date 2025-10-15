@@ -11,9 +11,10 @@ def find_scoring_analysis_filename(folder_path):
     for filename in os.listdir(folder_path):
         if filename.endswith('.csv'):
             full_path = os.path.join(folder_path, filename)
+            return full_path
         else:
-            raise FileNotFoundError("No file ending with '.csv' found in the folder.")
-    return full_path
+            continue
+    raise FileNotFoundError
 
 def find_num_of_decks_scored(filename):
     n = filename.split('=')[1]
@@ -69,8 +70,8 @@ def blackbox(value_matrix, ax):
                 )
             )
 
-def heatmap(path: str, t_or_c: str = 'Tricks'):
-    filename = find_scoring_analysis_filename(path)
+def heatmap(df_folder: str, heatmap_folder: str, t_or_c: str = 'Tricks'):
+    filename = find_scoring_analysis_filename(df_folder)
     N = find_num_of_decks_scored(filename)
 
     df = load_scoring_analysis(filename)
@@ -92,14 +93,12 @@ def heatmap(path: str, t_or_c: str = 'Tricks'):
 
     blackbox(value_matrix, ax)
 
-    parent_path = os.path.dirname(filename) + os.sep
-
     # Optional: Titles and labels
     plt.title(f"My Chance of Win(Draw) \nby {t_or_c} \nN={N}")
     plt.ylabel("Opponent choice")
     plt.xlabel("My choice")
     plt.tight_layout()
-    plt.savefig(f"{parent_path}By{t_or_c}.svg", format="svg")
+    plt.savefig(f"{heatmap_folder}/By{t_or_c}.svg", format="svg")
 
 
 
