@@ -209,7 +209,7 @@ def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str, num_of_d
     #change num_of_decks_scored to be a string with N=
     num_of_decks_scored = f"_N={str(num_of_decks_scored)}"
 
-    filename = filename + num_of_decks_scored
+    filename = filename + num_of_decks_scored + '.csv'
     
     # Make sure the folder exists
     os.makedirs(folder, exist_ok=True)

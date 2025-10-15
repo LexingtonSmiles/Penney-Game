@@ -5,6 +5,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
 import os
+import re
+
+def find_scoring_analysis_filename(folder_path):
+    for filename in os.listdir(folder_path):
+        if filename.endswith('.csv'):
+            full_path = os.path.join(folder_path, filename)
+        else:
+            raise FileNotFoundError("No file ending with '.csv' found in the folder.")
+    return full_path
 
 def find_num_of_decks_scored(filename):
     n = filename.split('=')[1]
@@ -61,9 +70,10 @@ def blackbox(value_matrix, ax):
             )
 
 def heatmap(path: str, t_or_c: str = 'Tricks'):
-    N = find_num_of_decks_scored(path)
+    filename = find_scoring_analysis_filename(path)
+    N = find_num_of_decks_scored(filename)
 
-    df = load_scoring_analysis(path)
+    df = load_scoring_analysis(filename)
     if t_or_c == 'Tricks':
         df = calculate('p1_wins_tricks', 'p2_wins_tricks', 'draws_tricks', df)
     elif t_or_c == 'Cards':
@@ -82,7 +92,7 @@ def heatmap(path: str, t_or_c: str = 'Tricks'):
 
     blackbox(value_matrix, ax)
 
-    parent_path = os.path.dirname(path) + os.sep
+    parent_path = os.path.dirname(filename) + os.sep
 
     # Optional: Titles and labels
     plt.title(f"My Chance of Win(Draw) \nby {t_or_c} \nN={N}")
