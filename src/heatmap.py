@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.colors as mcolors
+import os
 
 def find_num_of_decks_scored(filename):
     n = filename.split('=')[1]
@@ -82,17 +83,18 @@ def heatmap(path: str, t_or_c: str = 'Tricks'):
 
     blackbox(value_matrix, ax)
 
+    parent_path = os.path.dirname(path) + os.sep
+
     # Optional: Titles and labels
     plt.title(f"My Chance of Win(Draw) \nby {t_or_c} \nN={N}")
     plt.ylabel("Opponent choice")
     plt.xlabel("My choice")
     plt.tight_layout()
-    plt.savefig(f"By{t_or_c}.svg", format="svg")
+    plt.savefig(f"{parent_path}By{t_or_c}.svg", format="svg")
 
 
 
     #Whats left:
-    #add file path to save fig
     #check efficieny - specically when to make ints or multiply by 100
     #check if counting the scored decks works
     #check if new datagen works 

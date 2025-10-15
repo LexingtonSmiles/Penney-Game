@@ -200,13 +200,15 @@ def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str, num_of_d
         filename (str): The name of the file (e.g. 'output.csv').
     """
     #change num_of_decks_scored to be a string with N=
-    num_of_decks_scored = f"N = {str(num_of_decks_scored)}"
+    num_of_decks_scored = f"_N={str(num_of_decks_scored)}"
+
+    filename = filename + num_of_decks_scored
     
     # Make sure the folder exists
     os.makedirs(folder, exist_ok=True)
 
     # Build full path
-    filepath = os.path.join(folder, filename, num_of_decks_scored)
+    filepath = os.path.join(folder, filename)
 
     # Save DataFrame
     df.to_csv(filepath, index=False)
@@ -314,6 +316,7 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
     
     # Load or create main DataFrame
     df = check_or_create_wins_df(df_folder, df_name, combos)
+    num_of_decks_scored = 0
     
     for file_idx in range(raw_num):
         # Load first raw file
@@ -330,7 +333,6 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
         num_decks = decks.shape[0]
     
 
-        num_of_decks_scored = 0
         for deck_idx in range(num_decks):
             # Get a single deck
             single_deck = decks[deck_idx]
