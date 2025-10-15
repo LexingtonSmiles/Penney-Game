@@ -106,11 +106,16 @@ def check_or_create_wins_df(folder: str, filename: str, combos: list[dict]) -> p
     Returns:
         pd.DataFrame: Loaded or newly created DataFrame.
     """
+    fold = os.path.dirname(folder) 
+    prefix = filename 
     filepath = os.path.join(folder, filename)
+
+    any_match = any(f.startswith(prefix) for f in os.listdir(fold))
     
-    if os.path.isfile(filepath):
+    if any_match:
         print(f"Found existing file: {filepath}. Loading DataFrame.")
         df = pd.read_csv(filepath)
+        decks_scored = len(df) // len(combos)
     else:
         print(f"No existing file found. Creating blank DataFrame with {len(combos)} rows.")
         
@@ -125,8 +130,10 @@ def check_or_create_wins_df(folder: str, filename: str, combos: list[dict]) -> p
         df["p2_wins_tricks"] = None
         df["draws_cards"] = None
         df["draws_tricks"] = None
+
+        decks_scored = 0
     
-    return df
+    return df, decks_scored
 
 def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
     """
@@ -315,8 +322,7 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
     raw_num = count_raw_files(data_folder)
     
     # Load or create main DataFrame
-    df = check_or_create_wins_df(df_folder, df_name, combos)
-    num_of_decks_scored = 0
+    df, num_of_decks_scored = check_or_create_wins_df(df_folder, df_name, combos)
     
     for file_idx in range(raw_num):
         # Load first raw file
@@ -348,12 +354,14 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
 
             #update number of decks scored
             num_of_decks_scored += 1
+            print(num_of_decks_scored)
             
         
         # Rename raw file to mark as processed
         rename_raw_to_cooked(data_folder, filename)
     
     # Save updated DataFrame
+    print(num_of_decks_scored)
     save_dataframe_to_csv(df, df_folder, df_name, num_of_decks_scored)
     
 

@@ -36,7 +36,6 @@ def matrix(df):
 
     # Create a matrix of annotations
     annotation_matrix = pd.DataFrame(index=p1_values, columns=p2_values)
-    print(p1_values, p2_values)
 
     # Fill in the matrix with our formatted annotations
     for _, row in df.iterrows():
