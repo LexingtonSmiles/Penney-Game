@@ -197,29 +197,56 @@ def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
 
 
 
-def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str, num_of_decks_scored: int) -> None:
-    """
-    Save a pandas DataFrame to a CSV file.
+# def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str, num_of_decks_scored: int) -> None:
+#     """
+#     Save a pandas DataFrame to a CSV file.
 
-    Parameters:
-        df (pd.DataFrame): The DataFrame to save.
-        folder (str): Directory where the file will be saved.
-        filename (str): The name of the file (e.g. 'output.csv').
-    """
-    #change num_of_decks_scored to be a string with N=
-    num_of_decks_scored = f"_N={str(num_of_decks_scored)}"
+#     Parameters:
+#         df (pd.DataFrame): The DataFrame to save.
+#         folder (str): Directory where the file will be saved.
+#         filename (str): The name of the file (e.g. 'output.csv').
+#     """
+#     #change num_of_decks_scored to be a string with N=
+#     num_of_decks_scored = f"_N={str(num_of_decks_scored)}"
 
-    filename = filename + num_of_decks_scored + '.csv'
+#     filename = filename + num_of_decks_scored + '.csv'
     
-    # Make sure the folder exists
+#     # Make sure the folder exists
+#     os.makedirs(folder, exist_ok=True)
+
+#     # Build full path
+#     filepath = os.path.join(folder, filename)
+
+#     # Save DataFrame
+    
+#     df.to_csv(filepath, index=False)
+#     print(f"DataFrame saved to {filepath}")
+    
+def save_dataframe_to_csv(df: pd.DataFrame, folder: str, num_of_decks_scored: int) -> None:
+    """
+    Safely save DataFrame as '{base_filename}_N=###.csv'.
+    Keeps the previous file until the new one is fully written.
+    """
+    base_filename = scoring_analysis
+    
     os.makedirs(folder, exist_ok=True)
+    new_filename = f"{base_filename}_N={num_of_decks_scored}.csv"
+    temp_filename = f"{base_filename}_N={num_of_decks_scored}_temp.csv"
+    new_filepath = os.path.join(folder, new_filename)
+    temp_filepath = os.path.join(folder, temp_filename)
 
-    # Build full path
-    filepath = os.path.join(folder, filename)
+    # Step 1: Write to temp file
+    df.to_csv(temp_filepath, index=False)
 
-    # Save DataFrame
-    df.to_csv(filepath, index=False)
-    print(f"DataFrame saved to {filepath}")
+    # Step 2: Remove older completed files (but not the new temp)
+    for f in os.listdir(folder):
+        if re.match(rf"{re.escape(base_filename)}_N=\d+\.csv$", f) and f != new_filename:
+            os.remove(os.path.join(folder, f))
+
+    # Step 3: Rename temp → final
+    os.rename(temp_filepath, new_filepath)
+
+    print(f"✅ Safely saved: {new_filepath}")
 
 def count_wins(df: pd.DataFrame) -> pd.DataFrame:
     """
