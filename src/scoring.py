@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import re
 
 PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
 PATH_OUTPUT = "C:/Users/kmand/DATA 440/Penney-Game/outputs"
@@ -227,7 +228,7 @@ def save_dataframe_to_csv(df: pd.DataFrame, folder: str, num_of_decks_scored: in
     Safely save DataFrame as '{base_filename}_N=###.csv'.
     Keeps the previous file until the new one is fully written.
     """
-    base_filename = scoring_analysis
+    base_filename = 'scoring_analysis'
     
     os.makedirs(folder, exist_ok=True)
     new_filename = f"{base_filename}_N={num_of_decks_scored}.csv"
@@ -389,7 +390,7 @@ def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
     
     # Save updated DataFrame
     print(num_of_decks_scored)
-    save_dataframe_to_csv(df, df_folder, df_name, num_of_decks_scored)
+    save_dataframe_to_csv(df, df_folder, num_of_decks_scored)
     
 
 #list of dictionaries with the 56 relevant players' choices combos
