@@ -70,7 +70,7 @@ def blackbox(value_matrix, ax):
                 )
             )
 
-def heatmap(df_folder: str, heatmap_folder: str, t_or_c: str = 'Tricks'):
+def make_heatmap(df_folder: str, heatmap_folder: str, t_or_c: str = 'Tricks'):
     filename = find_scoring_analysis_filename(df_folder)
     N = find_num_of_decks_scored(filename)
 
@@ -100,7 +100,10 @@ def heatmap(df_folder: str, heatmap_folder: str, t_or_c: str = 'Tricks'):
     plt.tight_layout()
     plt.savefig(f"{heatmap_folder}/By{t_or_c}.svg", format="svg")
 
-
+def heatmap(df_folder: str, heatmap_folder: str):
+    make_heatmap(df_folder, heatmap_folder, 'Tricks')
+    make_heatmap(df_folder, heatmap_folder, 'Cards')
+    return
 
     #Whats left:
     #check efficieny - specically when to make ints or multiply by 100
