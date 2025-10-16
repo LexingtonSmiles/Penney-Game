@@ -1,9 +1,8 @@
 import pandas as pd
 import numpy as np
 import os
+import re
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
-PATH_OUTPUT = "C:/Users/kmand/DATA 440/Penney-Game/outputs"
 def load_first_raw_file(path: str) -> tuple[np.ndarray, str]:
     """
     Load the first file in a folder whose name contains 'raw' using np.load.
@@ -88,51 +87,42 @@ def rename_raw_to_cooked(path: str, filename: str) -> str:
 
     # Rename the file
     os.rename(old_path, new_path)
-    print(f"Renamed: {filename} -> {new_name}")
 
     return new_name
 
-def check_or_create_wins_df(folder: str, filename: str, combos: list[dict]) -> pd.DataFrame:
-    """
-    Check if a CSV file exists in the folder. 
-    If yes, load it as a DataFrame. 
-    If not, create a blank DataFrame with rows from combos and scoring columns.
+def check_or_create_wins_df(folder: str, combos: list[dict]) -> pd.DataFrame:
+    base_filename = "scoring_analysis"
+    pattern = re.compile(rf"{base_filename}_N=\d+\.csv")
     
-    Parameters:
-        folder (str): Directory where the file might exist.
-        filename (str): Name of the CSV file (e.g. 'scoring.csv').
-        combos (list): List of dictionaries with player_a and player_b combos.
-        
-    Returns:
-        pd.DataFrame: Loaded or newly created DataFrame.
-    """
-    fold = os.path.dirname(folder) 
-    prefix = filename 
-    filepath = os.path.join(folder, filename)
-
-    any_match = any(f.startswith(prefix) for f in os.listdir(fold))
+    found_file = None
+    for f in os.listdir(folder):
+        if pattern.match(f):
+            found_file = f
+            break
     
-    if any_match:
+    if found_file:
+        filepath = os.path.join(folder, found_file)
         print(f"Found existing file: {filepath}. Loading DataFrame.")
-        df = pd.read_csv(filepath)
-        decks_scored = len(df) // len(combos)
+        df = pd.read_csv(filepath, dtype={"p1": str, "p2": str})
+    
+        n_match = re.search(r"_N=(\d+)", found_file)
+        decks_scored = int(n_match.group(1)) if n_match else 0
     else:
         print(f"No existing file found. Creating blank DataFrame with {len(combos)} rows.")
-        
-        # Build DataFrame from combos
         df = pd.DataFrame(combos)
         df.rename(columns={"player_a": "p1", "player_b": "p2"}, inplace=True)
-
-        # Add scoring columns initialized to None
-        df["p1_wins_cards"] = None
-        df["p1_wins_tricks"] = None
-        df["p2_wins_cards"] = None
-        df["p2_wins_tricks"] = None
-        df["draws_cards"] = None
-        df["draws_tricks"] = None
-
+        
+        # Ensure p1 and p2 are strings
+        df["p1"] = df["p1"].astype(str)
+        df["p2"] = df["p2"].astype(str)
+        
+        # Add scoring columns
+        for col in ["p1_wins_cards", "p1_wins_tricks", "p2_wins_cards", 
+                    "p2_wins_tricks", "draws_cards", "draws_tricks"]:
+            df[col] = 0
+        
         decks_scored = 0
-    
+        
     return df, decks_scored
 
 def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
@@ -154,8 +144,8 @@ def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
 
 
     for combo in combos:
-        p1 = ''.join(combo["player_a"])
-        p2 = ''.join(combo["player_b"])
+        p1 = str(combo["player_a"])
+        p2 = str(combo["player_b"])
 
         p1_tricks = 0
         p1_cards = 0
@@ -194,40 +184,13 @@ def score_deck(deck: np.ndarray, combos: list) -> pd.DataFrame:
 
     df = pd.DataFrame(rows)
     return df
-
-
-
-# def save_dataframe_to_csv(df: pd.DataFrame, folder: str, filename: str, num_of_decks_scored: int) -> None:
-#     """
-#     Save a pandas DataFrame to a CSV file.
-
-#     Parameters:
-#         df (pd.DataFrame): The DataFrame to save.
-#         folder (str): Directory where the file will be saved.
-#         filename (str): The name of the file (e.g. 'output.csv').
-#     """
-#     #change num_of_decks_scored to be a string with N=
-#     num_of_decks_scored = f"_N={str(num_of_decks_scored)}"
-
-#     filename = filename + num_of_decks_scored + '.csv'
-    
-#     # Make sure the folder exists
-#     os.makedirs(folder, exist_ok=True)
-
-#     # Build full path
-#     filepath = os.path.join(folder, filename)
-
-#     # Save DataFrame
-    
-#     df.to_csv(filepath, index=False)
-#     print(f"DataFrame saved to {filepath}")
     
 def save_dataframe_to_csv(df: pd.DataFrame, folder: str, num_of_decks_scored: int) -> None:
     """
-    Safely save DataFrame as '{base_filename}_N=###.csv'.
+    Safely save DataFrame as 'scoring_analysis_N=###.csv'.
     Keeps the previous file until the new one is fully written.
     """
-    base_filename = scoring_analysis
+    base_filename = "scoring_analysis"
     
     os.makedirs(folder, exist_ok=True)
     new_filename = f"{base_filename}_N={num_of_decks_scored}.csv"
@@ -246,7 +209,7 @@ def save_dataframe_to_csv(df: pd.DataFrame, folder: str, num_of_decks_scored: in
     # Step 3: Rename temp → final
     os.rename(temp_filepath, new_filepath)
 
-    print(f"✅ Safely saved: {new_filepath}")
+    print(f"Safely saved: {new_filepath}")
 
 def count_wins(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -300,11 +263,11 @@ def count_wins(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(results)
 
 def update_results(results_df: pd.DataFrame, scores_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Update the cumulative results DataFrame with the new scores from scores_df.
+    # Force identifier columns to be strings
+    for col in ["p1", "p2"]:
+        results_df[col] = results_df[col].astype(str)
+        scores_df[col] = scores_df[col].astype(str)
     
-    Both DataFrames must have p1, p2 columns.
-    """
     # Merge on p1 and p2
     merged = results_df.merge(
         scores_df,
@@ -313,7 +276,6 @@ def update_results(results_df: pd.DataFrame, scores_df: pd.DataFrame) -> pd.Data
         suffixes=("", "_new")
     )
 
-    # Columns to update
     score_columns = [
         "p1_wins_tricks", "p2_wins_tricks", "draws_tricks",
         "p1_wins_cards", "p2_wins_cards", "draws_cards"
@@ -322,74 +284,59 @@ def update_results(results_df: pd.DataFrame, scores_df: pd.DataFrame) -> pd.Data
     for col in score_columns:
         new_col = col + "_new"
         if new_col in merged:
-            # Explicitly convert to numeric to avoid future warning
             merged[col] = pd.to_numeric(merged[col], errors="coerce").fillna(0)
             merged[new_col] = pd.to_numeric(merged[new_col], errors="coerce").fillna(0)
-
-            # Add new values to cumulative totals
             merged[col] = merged[col] + merged[new_col]
-
-            # Remove temporary new column
             merged = merged.drop(columns=new_col)
 
     return merged
 
-def analyze(data_folder: str, df_folder: str, df_name: str, combos: list):
+def analyze(data_folder: str, df_folder: str, combos: list, tot_decks: int):
     """
-    Load raw deck files, score each deck using combos, and save/update a DataFrame.
-    
-    Parameters:
-        data_folder (str): folder containing raw deck files
-        df_folder (str): folder to store/load main DataFrame
-        df_name (str): CSV filename for main DataFrame
-        combos (list): list of player combinations
+    Load all raw deck files, score each deck using combos, and save/update a cumulative DataFrame.
+    Prints cumulative progress over total number of decks.
     """
-    
-    # Count number of raw files
-    raw_num = count_raw_files(data_folder)
-    
-    # Load or create main DataFrame
-    df, num_of_decks_scored = check_or_create_wins_df(df_folder, df_name, combos)
-    
-    for file_idx in range(raw_num):
-        # Load first raw file
-        decks, filename = load_first_raw_file(data_folder)
-        if decks is None:
-            continue  # skip if no file found
-        
-        # Ensure decks is 2D (num_decks x deck_length)
-        if decks.ndim == 3 and decks.shape[0] == 1:
+
+    # Load or create cumulative DataFrame
+    df, num_of_decks_scored = check_or_create_wins_df(df_folder, combos)
+
+    # Get all raw files
+    raw_files = sorted([f for f in os.listdir(data_folder) if "raw" in f and os.path.isfile(os.path.join(data_folder, f))])
+    if not raw_files:
+        print("No raw files found to process.")
+        return
+
+
+    total_decks = tot_decks
+    total_decks_processed = 0
+
+    # Process decks file by file
+    for file_idx, filename in enumerate(raw_files):
+        full_path = os.path.join(data_folder, filename)
+        decks = np.load(full_path)
+        if decks.ndim == 1:
+            decks = decks[np.newaxis, :]
+        elif decks.ndim == 3 and decks.shape[0] == 1:
             decks = decks[0]
-        elif decks.ndim == 1:
-            decks = decks[np.newaxis, :]  # make it 2D with 1 row
-        
-        num_decks = decks.shape[0]
-    
 
-        for deck_idx in range(num_decks):
-            # Get a single deck
-            single_deck = decks[deck_idx]
-            
-            # Score deck
+        for single_deck in decks:
             df_scores = score_deck(single_deck, combos)
-
-            #count scores for wins and draws
             df_wins = count_wins(df_scores)
-            
-            # Append to main DataFrame
-            df = update_results(df,df_wins)
+            df = update_results(df, df_wins)
 
-            #update number of decks scored
+            total_decks_processed += 1
             num_of_decks_scored += 1
-            print(num_of_decks_scored)
-            
-        
-        # Rename raw file to mark as processed
+
+            # Update every 10k decks or at the last deck
+            if (total_decks_processed % 10000 == 0) or (total_decks_processed == total_decks):
+                progress_percent = (total_decks_processed / total_decks) * 100
+                print(f"Processed {total_decks_processed}/{total_decks} decks ({progress_percent:.2f}%)", end='\r', flush=True)
+
+        # Rename after processing
         rename_raw_to_cooked(data_folder, filename)
-    
-    # Save updated DataFrame
-    print(num_of_decks_scored)
-    save_dataframe_to_csv(df, df_folder, df_name, num_of_decks_scored)
+        
+    save_dataframe_to_csv(df, df_folder, num_of_decks_scored)
+    print(f"Total decks scored: {num_of_decks_scored}")
     
 
 #list of dictionaries with the 56 relevant players' choices combos
@@ -451,6 +398,4 @@ combos = [
     {"player_a": '111', "player_b": '101'},
     {"player_a": '111', "player_b": '110'},
 ]
-
-
 

@@ -4,7 +4,6 @@ import random
 import os
 import re
 
-PATH_DATA = "C:/Users/kmand/DATA 440/Penney-Game/data"
 
 seed = 0
 
@@ -35,7 +34,7 @@ def num_of_decks_per_file(tot_n:int, max_decks:int):
     leftover = tot_n % max_decks
     return full_files, leftover
 
-def filepath_raw(seed: int, num_of_decks: int):
+def filepath_raw(seed: int, num_of_decks: int,PATH_DATA: str):
     """
     generate file name for each individual deck
     """
@@ -59,7 +58,7 @@ def savefile(decks: np.array, filepath: str):
     np.save(filepath, decks)
     return
     
-def find_next_seed() -> int:
+def find_next_seed(PATH_DATA:str) -> int:
     """
     Scans all files in PATH_DATA and finds the highest seed number
     in filenames formatted like:
@@ -79,7 +78,7 @@ def find_next_seed() -> int:
     return max(seeds) + 1 if seeds else 0
     
 #@measure_rw
-def make_files(tot_n:int, max_decks:int = 10000):
+def make_files(tot_n:int, PATH_DATA: str, max_decks:int = 10000):
     """
     use generate function to make the decks for each file then use save function to 
     save each file with the filename function
@@ -90,7 +89,7 @@ def make_files(tot_n:int, max_decks:int = 10000):
     filepaths = [] 
     
     #find initial seed for generation
-    seed = find_next_seed()
+    seed = find_next_seed(PATH_DATA)
     
     for i in range(full_files):
         #make a placeholder for all decks about to go into the file
@@ -104,7 +103,7 @@ def make_files(tot_n:int, max_decks:int = 10000):
             full_storage.append(generate_decks(max_decks, seed))
             
             #make filepath/name
-            filepath = filepath_raw(seed, max_decks)
+            filepath = filepath_raw(seed, max_decks, PATH_DATA)
 
             #use save file raw to save the file with all the decks in it  
             savefile(full_storage, filepath)
@@ -121,11 +120,11 @@ def make_files(tot_n:int, max_decks:int = 10000):
         leftover_storage = []
             
         #generate decks for the not full files
-        seed = find_next_seed()
+        seed = find_next_seed(PATH_DATA)
         leftover_storage.append(generate_decks(leftover, seed))
 
         #make filepath/name
-        filepath = filepath_raw(seed, leftover)
+        filepath = filepath_raw(seed, leftover, PATH_DATA)
 
         #use save file raw to save the file with all the decks in it
         savefile(leftover_storage, filepath)
