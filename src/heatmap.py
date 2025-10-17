@@ -28,7 +28,7 @@ def load_scoring_analysis(path):
 
 def calculate(p1_wins: str, p2_wins: str, draws: str, df: pd.DataFrame):
     df["total_wins"] = df[p1_wins] + df[p2_wins] + df[draws]
-    df["p1_win_rate"] = df[p1_wins] / df["total_wins"]
+    df["p1_win_rate"] = df[p2_wins] / df["total_wins"]
     df["draw_rate"] = df[draws] / df["total_wins"]
     df["p1_win_rate"] = df["p1_win_rate"].round(2)
     df["draw_rate"] = df["draw_rate"].round(2)
