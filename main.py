@@ -59,10 +59,12 @@ def augment(PATH_DATA: str, PATH_OUTPUT: str):
         heatmap(df_folder = PATH_OUTPUT, heatmap_folder = HEATMAP_FOLDER)
         print(f"Heatmaps saved to {HEATMAP_FOLDER}")
         print("\n All Done! Yippee!")
+        sys.exit(0)
 
     elif response in {"no", "n"}:
-        print("You don't want to test our cool program we put so much time into? okay :(")
-        sys.exit(0)
+        print(f"\nCreating heatmaps!")
+        print(f"Heatmaps saved to {HEATMAP_FOLDER}")
+        sys.exit(0) 
 
     else:
         print("Invalid response. Please run the program again and type 'yes' or 'no'.")

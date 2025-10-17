@@ -17,7 +17,7 @@ def find_scoring_analysis_filename(folder_path):
     raise FileNotFoundError
 
 def find_num_of_decks_scored(filename):
-    n = filename.split('=')[1]
+    n = filename.split('=')[1].split(".")[0]
     return n
 
 def load_scoring_analysis(path):
@@ -89,13 +89,17 @@ def make_heatmap(df_folder: str, heatmap_folder: str, t_or_c: str = 'Tricks'):
     masked_matrix = value_matrix.mask(value_matrix == -1)
 
     plt.figure(figsize=(10, 8))
-    ax = sns.heatmap(masked_matrix, annot=annotation_matrix, fmt='', cmap=cmap, cbar=False, linewidths = 1, linecolor = 'white')
+    
+    ax = sns.heatmap(masked_matrix, annot=annotation_matrix, fmt='', cmap=cmap, cbar=False, linewidths = 1, linecolor = 'white', square = True)
+        
+
 
     blackbox(value_matrix, ax)
 
     # Optional: Titles and labels
     plt.title(f"My Chance of Win(Draw) \nby {t_or_c} \nN={N}")
     plt.ylabel("Opponent choice")
+    plt.yticks(rotation=0)
     plt.xlabel("My choice")
     plt.tight_layout()
     plt.savefig(f"{heatmap_folder}/By{t_or_c}.svg", format="svg")
