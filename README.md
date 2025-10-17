@@ -17,7 +17,7 @@ The aim of this project is to:
 ## Quick Start Guide
 
 To run the analysis of Penney's Game, use uv to sync the virtual environment. After that, run `main.py` in the virtual environment.
-You will be prompted as to if you want to augment the data. Then will be prompted as to the number of decks you wish to add to the dataset. After that, analysis wil be run and the heatmaps will be generated and saved in the **figures/** folder.
+You will be prompted as to if you want to augment the data. Then will be prompted as to the number of decks you wish to add to the dataset. After that, analysis wil be run and the heatmaps will be generated and saved in the **`figures/`** folder.
 
 ## File Descriptions
 
